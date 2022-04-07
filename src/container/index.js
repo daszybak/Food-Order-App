@@ -1,4 +1,4 @@
-export {default as Cart} from './cart.container/cart/cart.component';
+export {default as CartModal} from './cart.container/cart/cart.component';
 export {default as CartIcon} from './cart.container/cart-icon/cart-icon.component';
 export {default as CartItem} from './cart.container/cart-item/cart-item.component';
 

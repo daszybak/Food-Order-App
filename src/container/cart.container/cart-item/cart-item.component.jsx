@@ -2,7 +2,17 @@ import React from 'react';
 
 import './cart-item.styles.css';
 
-const CartItem = ({name, price, amount}) => {
+const CartItem = ({item, onAdd, onRemove}) => {
+  const {name, price, amount, id} = item;
+
+  const handleOnAdd = () => {
+    onAdd(item);
+  };
+
+  const handleOnRemove = () => {
+    onRemove(id);
+  };
+
   return (
     <li className="cart-item">
       <div>
@@ -13,8 +23,8 @@ const CartItem = ({name, price, amount}) => {
         </div>
       </div>
       <div className="actions">
-        <button>−</button>
-        <button>+</button>
+        <button onClick={handleOnRemove}>−</button>
+        <button onClick={handleOnAdd}>+</button>
       </div>
     </li>
   );

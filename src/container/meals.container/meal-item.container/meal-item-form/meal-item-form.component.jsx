@@ -11,8 +11,12 @@ const MealItemForm = ({addItems}) => {
 
   const handleOnSubmit = (event) => {
     event.preventDefault();
-    if (!inputRef.current && !inputRef.current.value < 1) {
+    if (
+      inputRef.current &&
+      (inputRef.current.value < 1 || inputRef.current.value > 5)
+    ) {
       setValidInputState(false);
+      console.log(validInputState);
       return;
     } else {
       addItems(inputRef.current.value);
@@ -30,7 +34,7 @@ const MealItemForm = ({addItems}) => {
       </form>
       <p>
         {!validInputState &&
-          'Invalid input. Please enter a number greater than 0'}
+          'Invalid input. Please enter a number greater than 0 and smaller than 6'}
       </p>
     </div>
   );

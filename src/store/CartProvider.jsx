@@ -4,18 +4,25 @@ import CartContext from './cart';
 const defaultCartState = {
   items: [],
   amount: 0,
+  itemsAmount: 0,
 };
 
 const cartReducer = (state, action) => {
   let updatedItem;
   let updatedItems;
   let updatedTotalAmount;
-  const id = action.id ?? action.value.id;
-  const itemIndex = state.items.findIndex((item) => item.id === id);
+  let updatedItemsAmount;
+
+  const id = action.value?.id ?? action.value;
+
+  const itemIndex = state.items?.findIndex((item) => item.id === id) ?? -1;
   if (action.type === 'ADD_ITEM') {
     if (itemIndex > -1) {
+      console.log('add state.amount', state.amount);
       updatedTotalAmount =
-        state.amount + action.value.price * action.value.amount;
+        Number(state.amount) + Number(action.value.price * action.value.amount);
+      updatedItemsAmount =
+        Number(state.itemsAmount) + Number(action.value.amount);
       updatedItem = {
         ...state.items[itemIndex],
         amount:
@@ -26,28 +33,34 @@ const cartReducer = (state, action) => {
     } else {
       updatedItems = [...state.items];
       updatedItems.push(action.value);
+      updatedTotalAmount = action.value.price * action.value.amount;
+      updatedItemsAmount = action.value.amount;
     }
   } else if (action.type === 'REMOVE_ITEM') {
-    updatedTotalAmount =
-      state.amount - action.value.price * action.value.amount;
+    console.log(state.amount);
+    console.log(itemIndex);
     if (itemIndex > -1) {
       updatedItem = {
         ...state.items[itemIndex],
-        amount:
-          action.value.amount > state.items[itemIndex].amount
-            ? 0
-            : state.items[itemIndex].amount - action.value.amount,
+        amount: Number(state.items[itemIndex].amount - 1),
       };
-      updatedItems = {
-        ...state.items,
-      };
-      updatedItems[itemIndex] = updatedItem;
+      if (updatedItem.amount < 1) {
+        updatedItems = state.items.filter((item) => {
+          return item.id !== id;
+        });
+      } else {
+        updatedItems = [...state.items];
+        updatedItems[itemIndex] = updatedItem;
+      }
+      updatedTotalAmount = state.amount - state.items[itemIndex].price;
+      updatedItemsAmount = state.itemsAmount - 1;
     }
   }
-  console.log(updatedItems);
+
   return {
     items: updatedItems,
     amount: updatedTotalAmount,
+    itemsAmount: updatedItemsAmount,
   };
 };
 
@@ -58,13 +71,14 @@ const CartProvider = ({children}) => {
     dispatchCart({type: 'ADD_ITEM', value: item});
   };
 
-  const handleRemoveItem = (item) => {
-    dispatchCart({type: 'REMOVE_ITEM', value: item});
+  const handleRemoveItem = (id) => {
+    dispatchCart({type: 'REMOVE_ITEM', value: id});
   };
 
   const cartContext = {
     items: cartState.items,
     amount: cartState.amount,
+    itemsAmount: cartState.itemsAmount,
     addItem: handleAddItem,
     removeItem: handleRemoveItem,
   };

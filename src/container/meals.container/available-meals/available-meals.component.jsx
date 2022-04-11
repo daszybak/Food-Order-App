@@ -1,45 +1,44 @@
-import React from 'react';
+import React, {useReducer, useEffect} from 'react';
 
 import {Card} from './../../../components';
 import MealItem from '../meal-item.container/meal-item/meal-item.component';
+import meals from '../../../api/meals.api';
 
 import './available-meals.styles.css';
 
-const DUMMY_MEALS = [
-  {
-    id: 'm1',
-    name: 'Sushi',
-    description: 'Finest fish and veggies',
-    price: 22.99,
-  },
-  {
-    id: 'm2',
-    name: 'Schnitzel',
-    description: 'A german specialty!',
-    price: 16.5,
-  },
-  {
-    id: 'm3',
-    name: 'Barbecue Burger',
-    description: 'American, raw, meaty',
-    price: 12.99,
-  },
-  {
-    id: 'm4',
-    name: 'Green Bowl',
-    description: 'Healthy...and green...',
-    price: 18.99,
-  },
-];
+const mealsReducer = (state, action) => {
+  switch (action.type) {
+    case 'GET_MEALS':
+      return action.value;
+    default:
+      throw new Error(
+        'This type of meal action is not specified ',
+        action.type
+      );
+  }
+};
 
 const AvailableMeals = () => {
-  const RenderedMealItems = DUMMY_MEALS.map((meal) => {
-    return (
-      <li key={meal.id}>
-        <MealItem meal={meal} />
+  const [mealList, dispatchMeals] = useReducer(mealsReducer, []);
+
+  useEffect(() => {
+    const getMeals = async () => {
+      const response = await meals.get();
+      dispatchMeals({type: 'GET_MEALS', value: response.data});
+    };
+    getMeals();
+  }, []);
+
+  let RenderedMealItems = [];
+
+  for (const key in mealList) {
+    if (!mealList.hasOwnProperty(key)) continue;
+    RenderedMealItems.push(
+      <li key={key}>
+        <MealItem meal={mealList[key]} />
       </li>
     );
-  });
+  }
 
   return (
     <div className="meals">

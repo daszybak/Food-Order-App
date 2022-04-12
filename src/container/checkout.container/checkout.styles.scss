@@ -1,0 +1,22 @@
+.form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 3rem;
+  row-gap: 0.5rem;
+  padding-top: 10px;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.form__buttons {
+  padding: 20px 0 0 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.form__hr {
+  border-bottom: 2px solid #8a2b06;
+}

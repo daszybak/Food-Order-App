@@ -70,7 +70,13 @@ const Cart = () => {
           </div>
         </>
       )}
-      {checkout && <Checkout closeModal={handleOnClickCloseCheckout} />}
+      {checkout && (
+        <Checkout
+          closeModal={handleOnClickCloseCheckout}
+          amount={amount}
+          items={items}
+        />
+      )}
     </>
   );
 };

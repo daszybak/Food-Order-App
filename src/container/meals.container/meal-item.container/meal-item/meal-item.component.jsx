@@ -5,8 +5,7 @@ import MealItemForm from '../meal-item-form/meal-item-form.component';
 
 import './meal-item.styles.css';
 
-const MealItem = ({meal}) => {
-  const {id, name, description, price} = meal;
+const MealItem = ({id, name, description, price}) => {
   const {addItem} = useContext(CartContext);
 
   const handleAddItems = (itemAmount) => {

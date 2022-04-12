@@ -55,6 +55,14 @@ const cartReducer = (state, action) => {
       updatedTotalAmount = state.amount - state.items[itemIndex].price;
       updatedItemsAmount = state.itemsAmount - 1;
     }
+  } else if (action.type === 'CLEAR_CART') {
+    return {
+      items: [],
+      amount: 0,
+      itemsAmount: 0,
+    };
+  } else {
+    throw new Error('This type of action is not available!', action.type);
   }
 
   return {
@@ -75,12 +83,17 @@ const CartProvider = ({children}) => {
     dispatchCart({type: 'REMOVE_ITEM', value: id});
   };
 
+  const clearCart = () => {
+    dispatchCart({type: 'CLEAR_CART'});
+  };
+
   const cartContext = {
     items: cartState.items,
     amount: cartState.amount,
     itemsAmount: cartState.itemsAmount,
     addItem: handleAddItem,
     removeItem: handleRemoveItem,
+    clearCart: clearCart,
   };
 
   return (
